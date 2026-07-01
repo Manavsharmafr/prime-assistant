@@ -236,4 +236,28 @@ class ToolRegistryService:
             parameters={"action": "ocr/summarize/capture"}
         )
 
+        # 10. Developer Workspace Tool
+        from app.services.developer_workspace import developer_workspace
+        async def developer_operation(db: Session, action: str, query: Optional[str] = None, file_path: Optional[str] = None, content: Optional[str] = None) -> Dict[str, Any]:
+            if action == "index":
+                return developer_workspace.index_project()
+            elif action == "search":
+                res = developer_workspace.search_code(query or "")
+                return {"status": "success", "results": res}
+            elif action == "diff":
+                if not file_path or content is None:
+                    return {"status": "error", "message": "Parameters 'file_path' and 'content' are required for diff action."}
+                return developer_workspace.generate_diff(file_path, content)
+            elif action == "git":
+                return developer_workspace.get_git_status()
+            else:
+                return {"status": "error", "message": f"Unknown developer workspace action: {action}"}
+
+        self.register_tool(
+            name="developer",
+            description="Perform structural code indexing, AST parsing, grep matching, unified diff rendering, and git repo checks.",
+            handler=developer_operation,
+            parameters={"action": "index/search/diff/git", "query": "Search query text", "file_path": "Workspace relative path", "content": "Modified file content string"}
+        )
+
 tool_registry = ToolRegistryService()

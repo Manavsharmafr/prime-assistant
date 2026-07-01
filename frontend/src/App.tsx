@@ -9,14 +9,15 @@ import MemoryCenter from './components/MemoryCenter';
 import SystemControlCenter from './components/SystemControlCenter';
 import { PluginManagerDashboard } from './components/PluginManagerDashboard';
 import { VoiceConsole } from './components/VoiceConsole';
+import { DeveloperWorkspace } from './components/DeveloperWorkspace';
 import { PrimeSpeechEngine } from './utils/speech';
-import { Cpu, Wifi, WifiOff, BookOpen, Brain, Terminal as TerminalIcon, Activity, Puzzle } from 'lucide-react';
+import { Cpu, Wifi, WifiOff, BookOpen, Brain, Terminal as TerminalIcon, Activity, Puzzle, Code2 } from 'lucide-react';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
 export default function App() {
   // Application State
-  const [activeTab, setActiveTab] = useState<'console' | 'memory' | 'system' | 'plugins'>('console');
+  const [activeTab, setActiveTab] = useState<'console' | 'memory' | 'system' | 'plugins' | 'developer'>('console');
   const [status, setStatus] = useState<'idle' | 'processing' | 'listening' | 'speaking'>('idle');
   const [isMuted, setIsMuted] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
@@ -387,6 +388,18 @@ export default function App() {
             <Puzzle size={12} />
             EXTENSIONS
           </button>
+          
+          <button
+            onClick={() => setActiveTab('developer')}
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-[11px] font-mono font-bold tracking-wider transition-all ${
+              activeTab === 'developer'
+                ? 'bg-prime-cyan/10 text-prime-cyan border border-prime-cyan/20 shadow-[0_0_8px_rgba(0,240,255,0.08)]'
+                : 'text-slate-400 hover:text-white border border-transparent'
+            }`}
+          >
+            <Code2 size={12} />
+            COCKPIT
+          </button>
         </div>
 
         {/* Global telemetry states */}
@@ -455,8 +468,10 @@ export default function App() {
             <MemoryCenter />
           ) : activeTab === 'system' ? (
             <SystemControlCenter />
-          ) : (
+          ) : activeTab === 'plugins' ? (
             <PluginManagerDashboard />
+          ) : (
+            <DeveloperWorkspace />
           )}
         </section>
       </main>

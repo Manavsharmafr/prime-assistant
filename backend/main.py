@@ -38,6 +38,7 @@ app.add_middleware(
 
 from app.api.plugins import router as plugins_router
 from app.api.desktop import router as desktop_router
+from app.api.developer import router as developer_router
 
 # Attach API routers
 app.include_router(system_router, prefix="/api")
@@ -46,6 +47,7 @@ app.include_router(memory_router, prefix="/api")
 app.include_router(automation_router, prefix="/api")
 app.include_router(plugins_router, prefix="/api")
 app.include_router(desktop_router, prefix="/api")
+app.include_router(developer_router, prefix="/api")
 
 # Background stats loop task reference
 stats_task = None
