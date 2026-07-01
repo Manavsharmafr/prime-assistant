@@ -8,6 +8,7 @@ import type { ResearchReport } from './components/Research';
 import MemoryCenter from './components/MemoryCenter';
 import SystemControlCenter from './components/SystemControlCenter';
 import { PluginManagerDashboard } from './components/PluginManagerDashboard';
+import { VoiceConsole } from './components/VoiceConsole';
 import { PrimeSpeechEngine } from './utils/speech';
 import { Cpu, Wifi, WifiOff, BookOpen, Brain, Terminal as TerminalIcon, Activity, Puzzle } from 'lucide-react';
 
@@ -437,6 +438,12 @@ export default function App() {
                 onApprove={handleApproveChallenge}
                 onDeny={handleDenyChallenge}
                 onExecuteCommand={handleCommandExecution}
+              />
+              <VoiceConsole
+                status={status}
+                isMuted={isMuted}
+                onVoiceTrigger={handleVoiceTrigger}
+                onMuteToggle={handleMuteToggle}
               />
               <Research
                 reports={reports}

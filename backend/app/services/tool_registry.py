@@ -190,4 +190,50 @@ class ToolRegistryService:
             parameters={"action": "save/search", "query": "Search query text", "content": "Text to index", "category": "Memory type category"}
         )
 
+        # 8. Desktop Automation Tool
+        from app.services.desktop_automation import desktop_automation
+        async def desktop_operation(db: Session, action: str, x: Optional[int] = None, y: Optional[int] = None, text: Optional[str] = None, keys: Optional[List[str]] = None) -> Dict[str, Any]:
+            if action == "move":
+                return desktop_automation.move_mouse(x or 0, y or 0)
+            elif action == "click":
+                return desktop_automation.click_mouse(x, y)
+            elif action == "type":
+                return desktop_automation.type_keyboard(text or "")
+            elif action == "hotkey":
+                return desktop_automation.press_hotkey(keys or [])
+            elif action == "clipboard_read":
+                return desktop_automation.get_clipboard()
+            elif action == "clipboard_write":
+                return desktop_automation.set_clipboard(text or "")
+            else:
+                return {"status": "error", "message": f"Unknown desktop action: {action}"}
+
+        self.register_tool(
+            name="desktop",
+            description="Control desktop mouse movement, mouse clicks, keyboard typing, system hotkeys, and clipboard.",
+            handler=desktop_operation,
+            parameters={"action": "move/click/type/hotkey/clipboard_read/clipboard_write", "x": "Coordinate X", "y": "Coordinate Y", "text": "Typing content", "keys": "Hotkey buttons array"}
+        )
+
+        # 9. Vision Tool
+        from app.services.screen_understanding import screen_understanding
+        async def vision_operation(db: Session, action: str) -> Dict[str, Any]:
+            if action == "ocr":
+                raw_text = screen_understanding.run_ocr()
+                return {"status": "success", "content": raw_text}
+            elif action == "summarize":
+                return screen_understanding.summarize_screen()
+            elif action == "capture":
+                base64_data = screen_understanding.capture_screen_base64()
+                return {"status": "success", "image": base64_data}
+            else:
+                return {"status": "error", "message": f"Unknown vision action: {action}"}
+
+        self.register_tool(
+            name="vision",
+            description="Capture operating system screen snapshots, execute OCR text recognition, and summarize screen contents.",
+            handler=vision_operation,
+            parameters={"action": "ocr/summarize/capture"}
+        )
+
 tool_registry = ToolRegistryService()
