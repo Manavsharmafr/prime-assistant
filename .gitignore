@@ -1,0 +1,40 @@
+# Node modules
+node_modules/
+dist/
+build/
+
+# Python environment & cache
+.venv/
+venv/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local databases & vectors
+*.db
+*.db-journal
+*.sqlite
+chroma_db/
+faiss_index/
+
+# Environment configurations
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.local-browsers/

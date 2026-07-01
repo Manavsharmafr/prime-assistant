@@ -1,0 +1,16 @@
+{
+  "name": "prime-assistant",
+  "version": "1.0.0",
+  "description": "Prime - Production-Quality AI Desktop Assistant",
+  "private": true,
+  "scripts": {
+    "bootstrap": "npm run install-deps",
+    "install-deps": "npm install --prefix frontend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "cd backend && ..\\.venv\\Scripts\\uvicorn.exe main:app --reload --port 8000",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
