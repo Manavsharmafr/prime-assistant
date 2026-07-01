@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, Float, Integer, Text
+from sqlalchemy import Column, String, DateTime, Float, Integer, Text, Boolean
 from datetime import datetime
 import uuid
 from app.core.database import Base
@@ -41,3 +41,12 @@ class AuditLog(Base):
     execution_duration = Column(Float, nullable=True)  # duration in seconds
     exit_code = Column(Integer, nullable=True)
     error_message = Column(Text, nullable=True)
+
+
+class PluginRecord(Base):
+    __tablename__ = "plugin_records"
+
+    id = Column(String, primary_key=True)  # unique name e.g., 'github', 'notion'
+    enabled = Column(Boolean, default=True, nullable=False)
+    config = Column(Text, nullable=True)  # JSON configuration credentials
+    health_status = Column(String, default="healthy", nullable=False)

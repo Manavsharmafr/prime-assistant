@@ -36,11 +36,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from app.api.plugins import router as plugins_router
+
 # Attach API routers
 app.include_router(system_router, prefix="/api")
 app.include_router(agents_router, prefix="/api")
 app.include_router(memory_router, prefix="/api")
 app.include_router(automation_router, prefix="/api")
+app.include_router(plugins_router, prefix="/api")
 
 # Background stats loop task reference
 stats_task = None
@@ -59,8 +62,14 @@ async def startup_event():
         if "estimated_impact" not in columns:
             db.execute(text("ALTER TABLE approval_requests ADD COLUMN estimated_impact TEXT;"))
         db.commit()
+
+        # Initialize plugins and register tools
+        from app.services.plugin_manager import plugin_manager
+        from app.services.mcp_client import mcp_client
+        plugin_manager.initialize_plugins(db)
+        mcp_client.register_discovered_mcp_tools()
     except Exception as e:
-        print(f"Database schema migration error: {str(e)}")
+        print(f"Database schema migration/plugin init error: {str(e)}")
     finally:
         db.close()
 

@@ -7,14 +7,15 @@ import { Research } from './components/Research';
 import type { ResearchReport } from './components/Research';
 import MemoryCenter from './components/MemoryCenter';
 import SystemControlCenter from './components/SystemControlCenter';
+import { PluginManagerDashboard } from './components/PluginManagerDashboard';
 import { PrimeSpeechEngine } from './utils/speech';
-import { Cpu, Wifi, WifiOff, BookOpen, Brain, Terminal as TerminalIcon, Activity } from 'lucide-react';
+import { Cpu, Wifi, WifiOff, BookOpen, Brain, Terminal as TerminalIcon, Activity, Puzzle } from 'lucide-react';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
 export default function App() {
   // Application State
-  const [activeTab, setActiveTab] = useState<'console' | 'memory' | 'system'>('console');
+  const [activeTab, setActiveTab] = useState<'console' | 'memory' | 'system' | 'plugins'>('console');
   const [status, setStatus] = useState<'idle' | 'processing' | 'listening' | 'speaking'>('idle');
   const [isMuted, setIsMuted] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
@@ -373,6 +374,18 @@ export default function App() {
             <Activity size={12} />
             SYSTEM CONTROLS
           </button>
+          
+          <button
+            onClick={() => setActiveTab('plugins')}
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-[11px] font-mono font-bold tracking-wider transition-all ${
+              activeTab === 'plugins'
+                ? 'bg-prime-purple/10 text-prime-purple border border-prime-purple/20 shadow-[0_0_8px_rgba(189,0,255,0.08)]'
+                : 'text-slate-400 hover:text-white border border-transparent'
+            }`}
+          >
+            <Puzzle size={12} />
+            EXTENSIONS
+          </button>
         </div>
 
         {/* Global telemetry states */}
@@ -433,8 +446,10 @@ export default function App() {
             </>
           ) : activeTab === 'memory' ? (
             <MemoryCenter />
-          ) : (
+          ) : activeTab === 'system' ? (
             <SystemControlCenter />
+          ) : (
+            <PluginManagerDashboard />
           )}
         </section>
       </main>
