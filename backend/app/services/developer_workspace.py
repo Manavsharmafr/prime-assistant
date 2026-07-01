@@ -8,13 +8,20 @@ from app.core.config import settings
 
 class DeveloperWorkspaceService:
     def __init__(self):
-        self.workspace_path = settings.PRIME_WORKSPACE_PATH
-        if not os.path.exists(self.workspace_path):
+        path = settings.PRIME_WORKSPACE_PATH
+        has_files = False
+        if os.path.exists(path):
+            for _, _, files in os.walk(path):
+                if files:
+                    has_files = True
+                    break
+        if not has_files:
             possible_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
             if os.path.exists(possible_path):
-                self.workspace_path = possible_path
+                path = possible_path
             else:
-                os.makedirs(self.workspace_path, exist_ok=True)
+                os.makedirs(path, exist_ok=True)
+        self.workspace_path = path
 
     def index_project(self) -> Dict[str, Any]:
         """Scan workspace recursively and compile symbol metrics (classes, functions, imports)."""
