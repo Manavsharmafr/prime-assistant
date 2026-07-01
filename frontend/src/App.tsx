@@ -10,14 +10,15 @@ import SystemControlCenter from './components/SystemControlCenter';
 import { PluginManagerDashboard } from './components/PluginManagerDashboard';
 import { VoiceConsole } from './components/VoiceConsole';
 import { DeveloperWorkspace } from './components/DeveloperWorkspace';
+import { WorkflowDashboard } from './components/WorkflowDashboard';
 import { PrimeSpeechEngine } from './utils/speech';
-import { Cpu, Wifi, WifiOff, BookOpen, Brain, Terminal as TerminalIcon, Activity, Puzzle, Code2 } from 'lucide-react';
+import { Cpu, Wifi, WifiOff, BookOpen, Brain, Terminal as TerminalIcon, Activity, Puzzle, Code2, GitMerge } from 'lucide-react';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
 export default function App() {
   // Application State
-  const [activeTab, setActiveTab] = useState<'console' | 'memory' | 'system' | 'plugins' | 'developer'>('console');
+  const [activeTab, setActiveTab] = useState<'console' | 'memory' | 'system' | 'plugins' | 'developer' | 'workflows'>('console');
   const [status, setStatus] = useState<'idle' | 'processing' | 'listening' | 'speaking'>('idle');
   const [isMuted, setIsMuted] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
@@ -400,6 +401,18 @@ export default function App() {
             <Code2 size={12} />
             COCKPIT
           </button>
+
+          <button
+            onClick={() => setActiveTab('workflows')}
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-[11px] font-mono font-bold tracking-wider transition-all ${
+              activeTab === 'workflows'
+                ? 'bg-prime-cyan/10 text-prime-cyan border border-prime-cyan/20 shadow-[0_0_8px_rgba(0,240,255,0.08)]'
+                : 'text-slate-400 hover:text-white border border-transparent'
+            }`}
+          >
+            <GitMerge size={12} />
+            WORKFLOWS
+          </button>
         </div>
 
         {/* Global telemetry states */}
@@ -470,8 +483,10 @@ export default function App() {
             <SystemControlCenter />
           ) : activeTab === 'plugins' ? (
             <PluginManagerDashboard />
-          ) : (
+          ) : activeTab === 'developer' ? (
             <DeveloperWorkspace />
+          ) : (
+            <WorkflowDashboard />
           )}
         </section>
       </main>

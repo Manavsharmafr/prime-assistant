@@ -50,3 +50,18 @@ class PluginRecord(Base):
     enabled = Column(Boolean, default=True, nullable=False)
     config = Column(Text, nullable=True)  # JSON configuration credentials
     health_status = Column(String, default="healthy", nullable=False)
+
+
+class WorkflowRecord(Base):
+    __tablename__ = "workflow_records"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, nullable=False)
+    status = Column(String, default="pending")  # 'pending', 'running', 'paused', 'completed', 'failed', 'cancelled'
+    steps = Column(Text, nullable=False)  # JSON string steps list
+    current_step_idx = Column(Integer, default=0)
+    retry_policy = Column(Text, nullable=True)  # JSON string policy
+    schedule_cron = Column(String, nullable=True)
+    next_run_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
